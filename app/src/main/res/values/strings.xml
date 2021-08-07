@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Fundo Notes</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="facebook_app_id">3089446337957193</string>
+    <string name="fb_login_protocol_scheme">fb3089446337957193</string>
+    <string name="open">open</string>
+    <string name="close">close</string>
+    <string name="profile">profile</string>
+    <string name="nav_icon">nav_icon</string>
+</resources>

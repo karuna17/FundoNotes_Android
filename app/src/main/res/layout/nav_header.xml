@@ -6,10 +6,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!--    <ImageView-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:src="@mipmap/ic_launcher_round"/>-->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="200dp"
@@ -20,15 +16,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Fundo Notes"
-            android:textColor="@color/purple_700"
+            android:textColor="@color/colorAccent"
             android:textSize="40sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.575"
+            app:layout_constraintHorizontal_bias="0.562"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.587" />
+            app:layout_constraintVertical_bias="0.013" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

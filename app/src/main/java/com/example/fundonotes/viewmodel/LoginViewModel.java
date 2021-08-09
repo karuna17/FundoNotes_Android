@@ -12,7 +12,6 @@ import com.example.fundonotes.model.FBStatus;
 import com.example.fundonotes.model.Status;
 import com.example.fundonotes.model.User;
 import com.facebook.AccessToken;
-import com.facebook.login.LoginManager;
 
 public class LoginViewModel extends ViewModel {
     private AuthService authService;
@@ -47,10 +46,10 @@ public class LoginViewModel extends ViewModel {
     }
 
     public void fbLogoutFundoNotes() {
-        LoginManager.getInstance().logOut();
+        authService.fbSignout();
     }
 
-//    public void normalLogout(AuthListener authListener) {
-//        authService.signOut(authListener) ;
-//    }
+    public void normalLogout() {
+        authService.signOut();
+    }
 }

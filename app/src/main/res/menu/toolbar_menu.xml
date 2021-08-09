@@ -4,15 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/navigation_icon"
-        android:icon="@drawable/ic_navigation"
-        android:title="nav_icon"
-        app:showAsAction="always"
-        tools:ignore="AlwaysShowAction" />
-
-    <item
         android:id="@+id/profile_img"
         android:actionLayout="@layout/profile_menu_layout"
-        android:title="profile"
-        app:showAsAction="always" />
+        app:showAsAction="always"
+        android:title="@string/profile"/>
 </menu>

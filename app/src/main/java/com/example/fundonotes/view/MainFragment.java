@@ -55,7 +55,7 @@ public class MainFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_main, container, false);
 
-        logoutButton = v.findViewById(R.id.logoutBtn);
+        logoutButton = v.findViewById(R.id.logout_button);
         loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory(new AuthService())).get(LoginViewModel.class);
         sharedViewModel = new ViewModelProvider(getActivity(), new SharedViewModelFactory()).get(SharedViewModel.class);
         return v;
@@ -71,7 +71,7 @@ public class MainFragment extends Fragment {
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
+                loginViewModel.normalLogout();
                 sharedViewModel.set_gotoLoginPageStatus(true);
             }
         });

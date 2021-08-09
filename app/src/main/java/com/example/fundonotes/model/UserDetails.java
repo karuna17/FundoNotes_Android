@@ -1,13 +1,24 @@
 package com.example.fundonotes.model;
 
-public class UserDetails {
-    private String email, password;
-    private String url;
+import android.net.Uri;
 
-    public UserDetails(String email, String password, String url) {
+public class UserDetails {
+
+    private String name, email, password;
+    private Uri url;
+
+    public UserDetails(String name, String email, Uri url) {
+        this.name = name;
         this.email = email;
-        this.password = password;
         this.url = url;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
@@ -26,11 +37,11 @@ public class UserDetails {
         this.password = password;
     }
 
-    public String getUrl() {
+    public Uri getUrl() {
         return url;
     }
 
-    public void setUrl(String url) {
+    public void setUrl(Uri url) {
         this.url = url;
     }
 }

@@ -107,6 +107,7 @@
             app:layout_constraintStart_toStartOf="@+id/inputPassword"
             app:layout_constraintTop_toBottomOf="@+id/inputPassword" />
 
+
         <TextView
             android:id="@+id/create_new_acc"
             android:layout_width="wrap_content"
@@ -116,11 +117,10 @@
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/loginBtn"
-            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintHorizontal_bias="0.514"
             app:layout_constraintStart_toStartOf="@+id/loginBtn"
             app:layout_constraintTop_toBottomOf="@+id/loginBtn"
-            app:layout_constraintVertical_bias="0.031" />
-
+            app:layout_constraintVertical_bias="0.334" />
 
         <com.facebook.login.widget.LoginButton
             android:id="@+id/faceBook_login_button"
@@ -130,10 +130,10 @@
             android:layout_marginTop="32dp"
             app:layout_constraintBottom_toTopOf="@+id/progress_bar"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.511"
+            app:layout_constraintHorizontal_bias="0.525"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/create_new_acc"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="0.086" />
 
         <ProgressBar
             android:id="@+id/progress_bar"
@@ -146,6 +146,21 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <CheckBox
+            android:id="@+id/remember_login"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:text="@string/remember_login"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toTopOf="@+id/create_new_acc"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/loginBtn" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

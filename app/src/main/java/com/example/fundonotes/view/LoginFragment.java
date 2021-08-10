@@ -1,8 +1,10 @@
 package com.example.fundonotes.view;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,6 +20,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -41,11 +44,7 @@ import java.util.Arrays;
 
 public class LoginFragment extends Fragment {
     private static final String TAG = "LoginFragment";
-    //    private TextView createNewAcc, forgotPassword;
-//    private Button loginButton;
-//    private EditText mEmail,mPassword;
-//    private ProgressBar progBar;
-//    private LoginButton fbLoginButton;
+
     CallbackManager callbackManager;
     FragmentLoginBinding binding;
     private LoginViewModel loginViewModel;
@@ -66,19 +65,14 @@ public class LoginFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_login, container, false);
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_login, container, false);
-
-//        mEmail = v.findViewById(R.id.inputEmail);
-//        mPassword = v.findViewById(R.id.inputPassword);
-//        createNewAcc = v.findViewById(R.id.create_new_acc);
-//        forgotPassword = v.findViewById(R.id.forgot_password);
-//        loginButton = v.findViewById(R.id.loginBtn);
-//        fbLoginButton = v.findViewById(R.id.faceBook_login_button);
-//        progBar = v.findViewById(R.id.progress_bar);
-
         callbackManager = CallbackManager.Factory.create();
-
         binding.setLifecycleOwner(this);
         return binding.getRoot();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
     }
 
     @Override
@@ -88,12 +82,14 @@ public class LoginFragment extends Fragment {
         loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory(new AuthService())).get(LoginViewModel.class);
         sharedViewModel = new ViewModelProvider(getActivity(), new SharedViewModelFactory()).get(SharedViewModel.class);
         binding.setLoginViewModel(loginViewModel);
+
         // call All the methods
         login();
         creatingNewAcc();
         resetingNewPassword();
         facebookLogin();
         fbLogOut();
+        stayLoggedIn();
     }
 
     /*  AuthListener listener = new AuthListener() {
@@ -231,10 +227,10 @@ public class LoginFragment extends Fragment {
 
             @Override
             public void onChanged(FBStatus fbStatus) {
-                Log.d(TAG, "onClick: dummy"+fbStatus.getFbUserStatus());
+                Log.d(TAG, "onClick: dummy" + fbStatus.getFbUserStatus());
 
                 if (fbStatus.getFbUserStatus()) {
-                    Log.d(TAG, "onClick: dummy1"+fbStatus.getFbUserStatus());
+                    Log.d(TAG, "onClick: dummy1" + fbStatus.getFbUserStatus());
                     Toast.makeText(getContext(), (CharSequence) fbStatus.getFbUserDetails(), Toast.LENGTH_SHORT).show();
                     sharedViewModel.set_gotoHomePageStatus(true);
                     binding.progressBar.setVisibility(View.GONE);
@@ -264,5 +260,35 @@ public class LoginFragment extends Fragment {
                 }
             }
         };
+    }
+
+    private void stayLoggedIn() {
+
+        SharedPreferences preferences = getContext().getSharedPreferences("checkbox", Context.MODE_PRIVATE);
+        String checkbox = preferences.getString("checkbox", "");
+        if (checkbox.equals("true")) {
+            sharedViewModel.set_gotoHomePageStatus(true);
+        } else if (checkbox.equals("false")) {
+            Toast.makeText(getContext(), "Please Login", Toast.LENGTH_SHORT).show();
+        }
+
+        binding.rememberLogin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (buttonView.isChecked()) {
+                    SharedPreferences preferences = getContext().getSharedPreferences("checkbox", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString("remember", "true");
+                    editor.apply();
+                    Toast.makeText(getContext(), "Checked", Toast.LENGTH_SHORT).show();
+                } else if (!buttonView.isChecked()) {
+                    SharedPreferences preferences = getContext().getSharedPreferences("checkbox", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString("remember", "false");
+                    editor.apply();
+                    Toast.makeText(getContext(), "Unchecked", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 }

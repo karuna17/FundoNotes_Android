@@ -8,4 +8,5 @@
     <string name="close">close</string>
     <string name="profile">profile</string>
     <string name="nav_icon">nav_icon</string>
+    <string name="remember_login">Remember LogIn</string>
 </resources>

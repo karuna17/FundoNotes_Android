@@ -5,7 +5,8 @@
 
     <item
         android:id="@+id/profile_img"
-        android:actionLayout="@layout/profile_menu_layout"
-        app:showAsAction="always"
-        android:title="@string/profile"/>
+        android:icon="@drawable/iconimg"
+        app:showAsAction="ifRoom"
+        android:title="@string/profile"
+        app:actionLayout="@layout/profile_menu_layout" />
 </menu>

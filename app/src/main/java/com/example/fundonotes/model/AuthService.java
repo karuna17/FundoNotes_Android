@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.login.LoginManager;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -21,8 +22,8 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class AuthService {
     private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    public FirebaseUser authCurrentUser = mAuth.getCurrentUser();
     UserDetails detailsOfUser;
+    FirebaseUser currentUser = mAuth.getCurrentUser();
 
     public void loginUser(User user, AuthListener listner) {
         mAuth.signInWithEmailAndPassword(user.getEmail(), user.getPassword()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -65,28 +66,25 @@ public class AuthService {
     }
 
     public void fbLogin(AccessToken accessToken, FaceBookAuthListener listener) {
-        String name;
-        String email;
-        Uri url;
-        if (authCurrentUser != null) {
-            name = authCurrentUser.getDisplayName();
-            email = authCurrentUser.getEmail();
-            url = authCurrentUser.getPhotoUrl();
-            detailsOfUser = new UserDetails(name, email, url);
-        }
-
         Log.d("Token Status: ", "handleFacebookAccessToken = " + accessToken);
         AuthCredential credintial = FacebookAuthProvider.getCredential(accessToken.getToken());
         mAuth.signInWithCredential(credintial).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    listener.onCompleteFBAuth(detailsOfUser, true);
                     Log.d("Facebook Status: ", "sign in with credintials: successful");
-//                    FirebaseUser firebaseUser = mAuth.getCurrentUser();
+
+                    FirebaseUser currentUser = mAuth.getCurrentUser();
+                    if (currentUser != null) {
+                        String name = currentUser.getDisplayName();
+                        String email = currentUser.getEmail();
+                        Uri url = currentUser.getPhotoUrl();
+                        detailsOfUser = new UserDetails(name, email, url);
+                    }
+                    listener.onCompleteFBAuth(detailsOfUser, true);
                 } else {
-                    listener.onCompleteFBAuth(detailsOfUser, false);
                     Log.d("Facebook Status: ", "sign in with credintials: failed", task.getException());
+                    listener.onCompleteFBAuth(detailsOfUser, false);
                 }
             }
         });

@@ -1,21 +1,32 @@
 package com.example.fundonotes.view;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.MenuItemCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.fundonotes.R;
 import com.example.fundonotes.model.Adapter;
 import com.example.fundonotes.viewmodel.SharedViewModel;
@@ -24,6 +35,8 @@ import com.google.firebase.FirebaseApp;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private SharedViewModel sharedViewModel;
@@ -34,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private RecyclerView noteList;
     //private ActivityMainBinding binding;
     private String TAG = "MainActivity";
-
+    final Context context = this;
     Adapter adapter;
 
     @SuppressLint({"RestrictedApi", "UseCompatLoadingForDrawables"})
@@ -69,8 +82,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         titles.add("first Note");
         content.add("sample content created");
 
-        adapter = new Adapter(titles,content);
-        noteList.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
+        adapter = new Adapter(titles, content);
+        noteList.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         noteList.setAdapter(adapter);
 
         sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
@@ -107,37 +120,48 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             default:
                 Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show();
         }
-
         return false;
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
-//        MenuItem menuItem = menu.findItem(R.id.profile_img);
-//        View view = MenuItemCompat.getActionView(menuItem);
-//
-//        CircleImageView profileImage = (CircleImageView) view.findViewById(R.id.toolbar_profile_image);
-//          Glide.with(profileImage).load(R.drawable.iconimg).into(profileImage);
-//        profileImage.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(MainActivity.this,"clicked on profile image",Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//        return super.onCreateOptionsMenu(menu);
-//    }
-//
-//    @SuppressLint("NonConstantResourceId")
-//    @Override
-//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-//        switch (item.getItemId()){
-//            case R.id.profile_img:
-//                Toast.makeText(MainActivity.this,"clicked on profile image",Toast.LENGTH_SHORT).show();
-//                break;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+        MenuItem menuItem = menu.findItem(R.id.profile_img);
+        View view = MenuItemCompat.getActionView(menuItem);
 
+        CircleImageView profileImage =  view.findViewById(R.id.toolbar_profile_image);
+        Glide
+                .with(this)
+                .load("https://images.unsplash.com/photo-1478070531059-3db579c041d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80")
+                .into(profileImage);
+        profileImage.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceType")
+            @Override
+            public void onClick(View v) {
+                // custom dialog
+                final Dialog dialog = new Dialog(context);
+                dialog.setContentView(R.layout.dialougebox_layout);
+                dialog.setTitle("User Profile");
 
+                // set the custom dialog components - text, image and button
+                TextView text = (TextView) dialog.findViewById(R.id.text);
+                text.setText("Hello");
+                ImageView image = (ImageView) dialog.findViewById(R.id.image);
+                image.setImageResource(R.drawable.iconimg);
+
+                Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
+                // if button is clicked, close the custom dialog
+                dialogButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog.show();
+
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
+    }
 }

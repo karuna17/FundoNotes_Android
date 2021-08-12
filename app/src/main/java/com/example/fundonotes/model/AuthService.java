@@ -2,14 +2,14 @@ package com.example.fundonotes.model;
 
 import android.net.Uri;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
+import com.example.fundonotes.R;
+import com.example.fundonotes.view.MainActivity;
 import com.facebook.AccessToken;
-import com.facebook.AccessTokenTracker;
 import com.facebook.login.LoginManager;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -19,11 +19,26 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class AuthService {
+    private static final String TAG = "User Profile Status: ";
     private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    FirebaseFirestore fstore = FirebaseFirestore.getInstance();
     UserDetails detailsOfUser;
+    DocumentReference documentReference;
+    String userID;
     FirebaseUser currentUser = mAuth.getCurrentUser();
+
+    String uName, uEmail, uPassword;
+
 
     public void loginUser(User user, AuthListener listner) {
         mAuth.signInWithEmailAndPassword(user.getEmail(), user.getPassword()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -53,13 +68,51 @@ public class AuthService {
     }
 
     public void registerUser(User user, AuthListener listner) {
+        String uName = user.getUser_name();
+        String uEmail = user.getEmail();
+        String uPassword = user.getPassword();
+        user = new User(uName, uEmail, uPassword);
         mAuth.createUserWithEmailAndPassword(user.getEmail(), user.getPassword()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     listner.onAuthComplete(true, "User Created Successfully");
+                    userID = mAuth.getCurrentUser().getUid();
+                    documentReference = fstore.collection("users").document(userID);
+                    Map<String, Object> userDB = new HashMap<>();
+                    userDB.put("fName", uName);
+                    userDB.put("u_email", uEmail);
+                    userDB.put("u_pass", uPassword);
+                    documentReference.set(userDB).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            Log.d(TAG, "onSuccess: User profile is created for " + userID);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d(TAG, "onFailure: " + e.toString());
+                        }
+                    });
+
                 } else {
                     listner.onAuthComplete(false, "Failed To Registered");
+                }
+            }
+        });
+    }
+
+    public void getDataFromFirebase(User userinfo) {
+        userID = mAuth.getCurrentUser().getUid();
+        documentReference = fstore.collection("users").document(userID);
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.getResult().exists()) {
+                    uName = task.getResult().getString("fName");
+                    uEmail = task.getResult().getString("u_email");
+                    uPassword = task.getResult().getString("u_pass");
+                    new User(uName, uEmail, uPassword);
                 }
             }
         });

@@ -77,6 +77,7 @@ public class RegisterFragment extends Fragment {
             public void onClick(View v) {
                 String email = binding.inputEmail.getText().toString().trim();
                 String password = binding.inputPassword.getText().toString().trim();
+                String fullName = binding.inputName.getText().toString();
 
                 if (TextUtils.isEmpty(email)) {
                     binding.inputEmail.setError("Email is required");
@@ -92,7 +93,7 @@ public class RegisterFragment extends Fragment {
                 }
                 binding.progressBar.setVisibility(View.VISIBLE);
                 //register the user in firebase
-                User user = new User(email, password);
+                User user = new User(fullName,email, password);
                 registerViewModel.registerToFundoNotes(user);
                 registerViewModel.userRegisterStatus.observe(RegisterFragment.this, status -> {
                     if (status.getStatus()) {
